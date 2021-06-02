@@ -35,6 +35,7 @@
         src:'Source',
         srcHelp:'Selecting an image will replace existing image with an Inlined Image.',
         alt:'Alt',
+        clipboard: 'Clipboard',
         class:'Class',
         classSelect:'Select Class',
         style:'Style',
@@ -69,6 +70,7 @@
         src:'Fuente',
         srcHelp:'La selección de una imagen reemplazará la imagen existente con una imagen Inline.',
         alt:'Alternativo',
+        clipboard: 'Clipboard',
         class:'Clases',
         classSelect:'Selecciona Forma',
         style:'Estilo',
@@ -103,6 +105,7 @@
         src:'Fonte',
         srcHelp:'Selecionar uma imagem irá substituir a imagem existente com uma imagem inline.',
         alt:'Alt',
+        clipboard: 'Clipboard',
         class:'Class',
         classSelect:'Selecione a Classe',
         style:'Estilo',
@@ -137,6 +140,7 @@
         src:'La source',
         srcHelp:'La sélection d\'une image remplacera l\'image existante par une Image Inline.',
         alt:'Alt',
+        clipboard: 'Clipboard',
         class:'Class CSS',
         classSelect:'Choisir une Class',
         style:'Style',
@@ -171,6 +175,7 @@
         src:'資源',
         srcHelp:'選擇圖像將用內聯圖像替換現有圖像.',
         alt:'圖片說明',
+        clipboard: 'Clipboard',
         class:'类',
         classSelect:'選擇 类',
         style:'样式',
@@ -207,6 +212,7 @@
         src:'Fonte',
         srcHelp:'elezione di un\'immagine sostituirà immagine esistente con un inline Immagine.',
         alt:'Alt',
+        clipboard: 'Clipboard',
         class:'Classe',
         classSelect:'Seleziona Classe',
         style:'Stile',
@@ -241,6 +247,7 @@
         src:'Quelle',
         srcHelp:'Wenn Sie ein Bild auswählen, wird das bestehende Bild durch ein Inlined Image ersetzt.',
         alt:'Alt Tag',
+        clipboard: 'Clipboard',
         class:'CSS Klasse',
         classSelect:'w&auml;hle CSS Klasse',
         style:'Stil',
@@ -275,6 +282,7 @@
         src:'Kaynak',
         srcHelp:'Bir görüntüyü seçmek, var olan resmi Inlined Image ile değiştirecektir.',
         alt:'Alt. Metin',
+        clipboard: 'Clipboard',
         class:'Sınıf',
         classSelect:'Sınıf Seçin',
         style:'Stil',
@@ -426,6 +434,12 @@
               '<div class="input-group col-xs-10">'+
                 '<input type="text" id="note-image-attributes-alt" class="note-image-attributes-alt form-control">'+
               '</div>'+
+            '</div>'+
+            '<div class="form-group">' +
+              '<label for="note-image-attributes-clipboard" class="control-label col-xs-2">' + lang.imageAttributes.clipboard + '</label>' +
+              '<div class="input-group col-xs-10">' +
+                '<input type="text" id="note-image-attributes-clipboard" class="note-image-attributes-clipboard form-control">' +
+              '</div>' +
             '</div>';
           }
           if (options.displayFields.imageExtra) {
@@ -534,6 +548,7 @@
           title:$img.attr('title'),
           src:$img.attr('src'),
           alt:$img.attr('alt'),
+          clipboard:$img.attr('data-text'),
           role:$img.attr('role'),
           class:$img.attr('class'),
           style:$img.attr('style'),
@@ -547,15 +562,17 @@
                 if(imgInfo.alt)$img.attr('alt',imgInfo.alt);else $img.removeAttr('alt');
                 if(imgInfo.title)$img.attr('title',imgInfo.title);else $img.removeAttr('title');
                 if(imgInfo.src)$img.attr('src',imgInfo.src);else $img.attr('src', '#');
-                if(imgInfo.class)$img.attr('class',imgInfo.class);else $img.removeAttr('class');
+                if(imgInfo.class||imgInfo.clipboard) $img.attr('class', [imgInfo.class].concat(imgInfo.clipboard ? ['js-clipboard'] : []).join(' '));else $img.removeAttr('class');
                 if(imgInfo.style)$img.attr('style',imgInfo.style);else $img.removeAttr('style');
                 if(imgInfo.role)$img.attr('role',imgInfo.role);else $img.removeAttr('role');
+                if(imgInfo.clipboard)$img.attr('data-text', imgInfo.clipboard); else $img.removeAttr('data-text');
               }else{
                 $img.attr('alt',imgInfo.alt);
                 $img.attr('title',imgInfo.title);
-                $img.attr('class',imgInfo.class);
+                $img.attr('class',[imgInfo.class].concat(imgInfo.clipboard ? ['js-clipboard'] : []).join(' '));
                 $img.attr('style',imgInfo.style);
                 $img.attr('role',imgInfo.role);
+                $img.attr('data-text',imgInfo.clipboard);
               }
               if($img.parent().is("a"))$img.unwrap();
               var hrefRegex=new RegExp(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi);
@@ -578,6 +595,7 @@
               $imageInput=self.$dialog.find('.note-image-input'),
               $imageSrc=self.$dialog.find('.note-image-attributes-src'),
               $imageAlt=self.$dialog.find('.note-image-attributes-alt'),
+              $imageClipboard=self.$dialog.find('.note-image-attributes-clipboard'),
               $imageClass=self.$dialog.find('.note-image-attributes-class'),
               $imageStyle=self.$dialog.find('.note-image-attributes-style'),
               $imageRole=self.$dialog.find('.note-image-attributes-role'),
@@ -628,6 +646,7 @@
                 title:$imageTitle.val(),
                 src:$imageSrc.val(),
                 alt:$imageAlt.val(),
+                clipboard:$imageClipboard.val(),
                 class:$imageClass.val(),
                 style:$imageStyle.val(),
                 role:$imageRole.val(),
@@ -639,8 +658,9 @@
               });
             });
             $imageTitle.val(imgInfo.title).focus;
-            $imageSrc.val(imgInfo.src)
+            $imageSrc.val(imgInfo.src);
             $imageAlt.val(imgInfo.alt);
+            $imageClipboard.val(imgInfo.clipboard);
             $imageClass.val(imgInfo.class);
             $imageStyle.val(imgInfo.style);
             $imageRole.val(imgInfo.role);
