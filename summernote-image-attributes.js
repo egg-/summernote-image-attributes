@@ -548,7 +548,7 @@
           title:$img.attr('title'),
           src:$img.attr('src'),
           alt:$img.attr('alt'),
-          clipboard:$img.attr('data-text'),
+          clipboard:$img.attr('data-clipboard'),
           role:$img.attr('role'),
           class:$img.attr('class'),
           style:$img.attr('style'),
@@ -562,20 +562,19 @@
                 if(imgInfo.alt)$img.attr('alt',imgInfo.alt);else $img.removeAttr('alt');
                 if(imgInfo.title)$img.attr('title',imgInfo.title);else $img.removeAttr('title');
                 if(imgInfo.src)$img.attr('src',imgInfo.src);else $img.attr('src', '#');
-                if(imgInfo.class||imgInfo.clipboard) $img.attr('class', [imgInfo.class].concat(imgInfo.clipboard ? ['js-clipboard'] : []).join(' '));else $img.removeAttr('class');
                 if(imgInfo.style)$img.attr('style',imgInfo.style);else $img.removeAttr('style');
                 if(imgInfo.role)$img.attr('role',imgInfo.role);else $img.removeAttr('role');
-                if(imgInfo.clipboard)$img.attr('data-text', imgInfo.clipboard); else $img.removeAttr('data-text');
+                if (imgInfo.clipboard) $img.attr('data-clipboard', imgInfo.clipboard); else $img.removeAttr('data-clipboard');
               }else{
                 $img.attr('alt',imgInfo.alt);
                 $img.attr('title',imgInfo.title);
-                $img.attr('class',[imgInfo.class].concat(imgInfo.clipboard ? ['js-clipboard'] : []).join(' '));
+                $img.attr('class',imgInfo.class);
                 $img.attr('style',imgInfo.style);
                 $img.attr('role',imgInfo.role);
-                $img.attr('data-text',imgInfo.clipboard);
+                $img.attr('data-clipboard',imgInfo.clipboard);
               }
               if($img.parent().is("a"))$img.unwrap();
-              var hrefRegex=new RegExp(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi);
+              var hrefRegex = new RegExp(/^[A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?/gi);
               if(imgInfo.href.match(hrefRegex)){
                 var lnktxt='<a';
                 if(imgInfo.linkClass)lnktxt+=' class="'+imgInfo.linkClass+'"';
